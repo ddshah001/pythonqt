@@ -30,6 +30,7 @@ class win(QtGui.QMainWindow):
         self.homescreen()
 
     btnaligny = 200
+    text = ""
 
 
     def homescreen(self):
@@ -49,9 +50,36 @@ class win(QtGui.QMainWindow):
         btn3.resize(80, 40)
         btn3.move(300, self.btnaligny)
 
-        textbox = QtGui.QLineEdit(self)
-        textbox.move(100,150)
-        textbox.resize(textbox.sizeHint())
+        self.textbox = QtGui.QLineEdit(self)
+        self.textbox.move(100,150)
+        self.textbox.resize(self.textbox.sizeHint())
+
+        checkbox = QtGui.QCheckBox('Change Title',self)
+        checkbox.move(250,145)
+        checkbox.stateChanged.connect(self.large)
+
+        self.probar = QtGui.QProgressBar(self)
+        self.probar.setGeometry(100,100,250,15)
+
+        self.btndown = QtGui.QPushButton("Download",self)
+        self.btndown.move(350, 100)
+        self.btndown.clicked.connect(self.download)
+
+        self.styleChoice = QtGui.QLabel("Windows Vista", self)
+        self.styleChoice.move(50, 150)
+
+        comboBox = QtGui.QComboBox(self)
+        comboBox.addItem("motif")
+        comboBox.addItem("Windows")
+        comboBox.addItem("cde")
+        comboBox.addItem("Plastique")
+        comboBox.addItem("Cleanlooks")
+        comboBox.addItem("windowsvista")
+        comboBox.move(50, 250)
+
+        self.styleChoice.move(50, 150)
+        comboBox.activated[str].connect(self.style_choice)
+
 
 
         mm = self.menuBar()
@@ -61,13 +89,36 @@ class win(QtGui.QMainWindow):
         eat.triggered.connect(self.close_app)
 
         ejt = QtGui.QAction(QtGui.QIcon("java-logo.png"),"JAVA",self)
-        #ejt.triggered.connect(self.close_app)
+        ejt.triggered.connect(self.font_change)
 
         self.toolBar = self.addToolBar("PHP")
         self.toolBar.addAction(eat)
         self.toolBar.addAction(ejt)
 
         self.show()
+
+    def font_change(self):
+        font, valid = QtGui.QFontDialog.getFont()
+
+        if valid == True:
+            self.styleChoice.setFont(font)
+
+    def style_choice(self, text):
+        self.styleChoice.setText(text)
+        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(text))
+
+    def download(self):
+        self.complate = 0
+        while self.complate < 100:
+            self.complate += 0.00001
+            self.probar.setValue(self.complate)
+
+    def large(self, s):
+        if s == QtCore.Qt.Checked:
+            self.setWindowTitle(self.textbox.text())
+
+        else:
+            self.setWindowTitle("Class Structur")
 
     def close_app(self):
         choice = QtGui.QMessageBox.question(self, "Close", "Want to exit?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)

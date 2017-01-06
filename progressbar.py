@@ -30,6 +30,7 @@ class win(QtGui.QMainWindow):
         self.homescreen()
 
     btnaligny = 200
+    text = ""
 
 
     def homescreen(self):
@@ -49,9 +50,21 @@ class win(QtGui.QMainWindow):
         btn3.resize(80, 40)
         btn3.move(300, self.btnaligny)
 
-        textbox = QtGui.QLineEdit(self)
-        textbox.move(100,150)
-        textbox.resize(textbox.sizeHint())
+        self.textbox = QtGui.QLineEdit(self)
+        self.textbox.move(100,150)
+        self.textbox.resize(self.textbox.sizeHint())
+
+        checkbox = QtGui.QCheckBox('Change Title',self)
+        checkbox.move(250,145)
+        checkbox.stateChanged.connect(self.large)
+
+        self.probar = QtGui.QProgressBar(self)
+        self.probar.setGeometry(100,100,250,15)
+
+        self.btndown = QtGui.QPushButton("Download",self)
+        self.btndown.move(350, 100)
+        self.btndown.clicked.connect(self.download)
+
 
 
         mm = self.menuBar()
@@ -68,6 +81,19 @@ class win(QtGui.QMainWindow):
         self.toolBar.addAction(ejt)
 
         self.show()
+
+    def download(self):
+        self.complate = 0
+        while self.complate < 100:
+            self.complate += 0.00001
+            self.probar.setValue(self.complate)
+
+    def large(self, s):
+        if s == QtCore.Qt.Checked:
+            self.setWindowTitle(self.textbox.text())
+
+        else:
+            self.setWindowTitle("Class Structur")
 
     def close_app(self):
         choice = QtGui.QMessageBox.question(self, "Close", "Want to exit?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
